@@ -1,0 +1,21 @@
+body{
+    background-color: #eee;
+}
+.banner_footer {
+    width: 100%;
+    text-align: center;
+    position: -ms-page;
+  }
+  .derechos, .frameworks, .creditos{
+    color: #fff;
+  
+  }
+  .derechos{
+    padding-top: 0.5rem;
+  }
+  .frameworks{
+    font-size: 2rem;
+  }
+  .creditos img{
+    padding-left: 0.5rem;
+  }

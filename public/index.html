@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ciclo del Agua - HidroCaribe</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/vue.min.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light mb-5">
+            <div class="container">
+                <a class="navbar-brand" href="#">HidroCaribe</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav" v-if="sesion">
+                    <div class="d-blocks text-center mr-3 ml-auto">
+                        <h6 class="mb-0">Bienvenido</h6>
+                        <label class="mb-0">
+                            {{ usuario.nombre }} {{ usuario.apellido }}
+                        </label>
+                    </div>
+                    <a class="nav-item nav-link" href="#" @click="configuracion = true">
+                        <i class="fa fa-cogs" aria-hidden="true"></i>
+                    </a>
+                </div>
+            </div>
+        </nav>
+        <h1 class="display-4 text-center mb-5">Control del Ciclo del Agua</h1>
+        <div class="container shadow-sm bg-white mb-5 rounded py-5">
+            <div class="container shadow w-50 pt-4 pb-1" v-if="!sesion || configuracion">
+                <h4 calss="text-center">Informacion de control</h4>
+                <form class="mt-4" @submit.prevent="">
+                    <div class="form-group row mb-2">
+                        <label for="duracion-ciclo" class="col-sm-4 col-form-label">Nombre</label>
+                        <div class="col-sm-8 mb-1">
+                            <input type="text" class="form-control" v-model="nombre" name="duracion-ciclo"
+                                id="duracion-ciclo" placeholder="Escriba su nombre" required>
+                        </div>
+                        <label for="duracion-ciclo" class="col-sm-4 col-form-label">Apellido</label>
+                        <div class="col-sm-8 mb-1">
+                            <input type="text" class="form-control" v-model="apellido" name="duracion-ciclo"
+                                id="duracion-ciclo" placeholder="Escriba su apellido" required>
+                        </div>
+                        <label for="duracion-ciclo" class="col-sm-4 col-form-label">Correo del supervisor</label>
+                        <div class="col-sm-8 mb-1">
+                            <input type="email" class="form-control" v-model="correo" name="duracion-ciclo"
+                                id="duracion-ciclo" placeholder="Ingrese el correo del supervisor" required>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="offset-sm-1 col-sm-10">
+                            <button type="submit" name="" id=""
+                                :class="['btn', 'btn-primary', 'btn-block', !isCompleted ? 'disabled' : '']"
+                                @click="iniciarSesion()">Aceptar</button>
+                            <button type="reset" name="" id="" class="btn btn-danger btn-block">Reiniciar</button>
+                        </div>
+                    </div>
+                    <h6 class="text-center">Esta pantalla solo aparecera la primera vez que ingrese a la aplicacion o
+                        cuando decida cambiar los datos</h6>
+                </form>
+            </div>
+            <div class="row p-4" v-else>
+                <div class="col-md-6">
+                    <h4>Fases para el mantenimiento de tuberias</h4>
+                    <div class="list-group">
+                        <a class="list-group-item list-group-item-action">
+                            <h6>1. Fase de Llegada de Agua</h6>
+                            <ul>
+                                <li> Estado: Alta presion de agua</li>
+                                <li> Duracion: 2-7 dias</li>
+                                <li> Mantimiento: no apta</li>
+                            </ul>
+                        </a>
+                        <a class="list-group-item list-group-item-action">
+                            <h6>2. Fase de Vaciado de tuberia</h6>
+                            <ul>
+                                <li> Estado: Baja presion de agua, esperando agotamiento del agua</li>
+                                <li> Duracion: 5 dias</li>
+                                <li> Mantimiento: no apta</li>
+                            </ul>
+                        </a>
+                        <a class="list-group-item list-group-item-action">
+                            <h6>3. Fase de Mantenimiento</h6>
+                            <ul>
+                                <li> Estado: tuberia vacia, lista para la limpieza</li>
+                                <li> Duracion: 5 dias</li>
+                                <li> Mantimiento: apta</li>
+                            </ul>
+                        </a>
+                        <a class="list-group-item list-group-item-action">
+                            <h6>4. Fase previa</h6>
+                            <ul>
+                                <li> Estado: esperando la llegada del agua</li>
+                                <li> Duracion: dias restantes despues del mantenimiento</li>
+                                <li> Mantimiento: no apta</li>
+                            </ul>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <h4>Responda</h4>
+                    <div class="container">
+                        <form class="mb-5" @submit.prevent="">
+                            <div class="form-group row mb-2">
+                                <label for="duracion-ciclo" class="col-sm-4 col-form-label">¿Cuanto dura la llegada del
+                                    agua?</label>
+                                <div class="col-sm-8">
+                                    <input type="number" class="form-control" v-model="duracion" name="duracion-ciclo"
+                                        id="duracion-ciclo" placeholder="Escriba la duracion" required>
+                                    <small id="passwordHelpInline" class="text-danger" v-if="valDuracion">
+                                        Indique un numero mayor a 1
+                                    </small>
+                                </div>
+                                <label for="duracion-ciclo" class="col-sm-4 col-form-label">¿Cuantos dias tarda el agua
+                                    en
+                                    llegar a la zona?</label>
+                                <div class="col-sm-8">
+                                    <input type="number" class="form-control" v-model="dias" name="duracion-ciclo"
+                                        id="duracion-ciclo" placeholder="Escriba los dias que tarda" required>
+                                    <small id="passwordHelpInline" class="text-danger" v-if="valDias">
+                                        el ciclo debe ser mayor a 21 dias y menor a 31
+                                    </small>
+                                </div>
+                                <label for="duracion-ciclo" class="col-sm-4 col-form-label">¿hace cuantos dias fue la
+                                    <b>fecha de llegada de agua</b> en tu zona?</label>
+                                <div class="col-sm-8">
+                                    <input type="number" class="form-control" v-model="fechaUltima"
+                                        name="duracion-ciclo" id="duracion-ciclo" placeholder="Escriba la duracion"
+                                        required>
+                                    <small id="passwordHelpInline" class="text-danger" v-if="valFecha">
+                                        Indique un numero mayor a 1
+                                    </small>
+                                </div>
+                            </div>
+                            <div class="form-group row mb-2">
+                                <div class="offset-sm-1 col-sm-10">
+                                    <button type="submit" name="" id=""
+                                        :class="['btn', 'btn-primary', 'btn-block', isDisabled ? 'disabled' : '']"
+                                        @click="evaluar()">Evaluar</button>
+                                    <button type="reset" name="" id=""
+                                        class="btn btn-danger btn-block">Reiniciar</button>
+                                </div>
+                            </div>
+                        </form>
+                        <div v-if="resultadoCompleto">
+                            <h5>Resultados</h5>
+                            <ul>
+                                <li> Fase del ciclo actual: {{ evaluacion.fase }}</li>
+                                <li> Mantimiento: {{ evaluacion.mantenimiento ? 'apta' : 'no apta' }}</li>
+                                <li> Retraso: {{ retraso ? 'si' : 'no' }}</li>
+                                <li> Nivel de Agua: {{ evaluacion.nivelAgua }}</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <footer class="bg-secondary text-dark banner_footer">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="frameworks pr-5">
+                            <i class="fab fa-vuejs    mx-3"></i>
+                            <i class="fab fa-bootstrap mx-3"></i>
+                            <i class="fab fa-node-js   mx-3 "></i>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+
+                    </div>
+                    <div class="col-md-4">
+                        <div class="creditos pl-5 pt-2">
+                            <img src="assets/logo_icono_lunar_software.svg" width="40px" alt="logo_lunar_software" />
+                            <img src="assets/logo_letras_lunar_software.svg" width="160px" alt="logo_lunar_software" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+    <script src="js/jquery-3.4.1.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/scripts.js"></script>
+    <script src="js/axios.min.js"></script>
+</body>
+
+</html>
