@@ -4,7 +4,8 @@
   "description": "servidor para la app del ciclo de hidrocaribe",
   "main": "app.js",
   "scripts": {
-    "dev": "nodemon app.js"
+    "dev": "nodemon app.js",
+    "start": "node app.js"
   },
   "author": "Marcel Salazar",
   "license": "ISC",
