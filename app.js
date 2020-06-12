@@ -25,20 +25,23 @@ app.post("/mail", async function (req, res) {
       },
     });
     let info = await transporter.sendMail({
-      from: body.usuario.nombre + " " + body.usuario.apellido + "<informe@lunar.com>",
+      from:
+        body.usuario.nombre +
+        " " +
+        body.usuario.apellido +
+        "<informe@lunar.com>",
       to: body.email,
       subject: "hello",
       text: "Informe de las Tuberias",
       html: body.informe,
     });
-    console.log("Message sent: %s", info.messageId);
+    console.log("Message sent: %s", info);
     console.log("preview urll: %s", nodemailer.getTestMessageUrl(info));
     res.write(
       JSON.stringify({
         error: false,
       })
     );
-    res.end();
   } catch (error) {
     console.log(error);
     res.write(
@@ -46,8 +49,8 @@ app.post("/mail", async function (req, res) {
         error: true,
       })
     );
-    res.end();
   }
+  res.end();
 });
 
 app.set("puerto", process.env.PORT || 4000); //se establece el puerto de conexion
